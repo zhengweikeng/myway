@@ -1,0 +1,52 @@
+socket_client:
+  image: daocloud.io/baidao/quotation:v2.7.0
+  command: node server.js
+  restart: always
+  links:
+  - redis
+  volumes:
+  - /etc/localtime:/etc/localtime
+  - /var/log/quotation:/var/log/quotation
+  environment:
+  - DEBUG=quote:*
+  - entry=tcp
+  - NODE_ENV=production
+  - agent=tt
+websocket_server:
+  image: daocloud.io/baidao/quotation:v2.7.0
+  command: node server.js
+  restart: always
+  links:
+  - redis
+  ports:
+  - 58080:8080
+  volumes:
+  - /etc/localtime:/etc/localtime
+  environment:
+  - DEBUG=websocket:*
+  - entry=websocket
+  - NODE_ENV=production
+  - port=8080
+  - agent=tt
+redis:
+  image: daocloud.io/daocloud/dao-redis:master-init
+  expose:
+  - '6379'
+  environment:
+  - REDIS_PASS=FrbMl1i2Tzv1bgw0W8ao
+strandard_websocket_server:
+  image: daocloud.io/baidao/quotation:v2.7.0
+  command: node server.js
+  restart: always
+  links: 
+  - redis
+  ports:
+  - 48080:8080
+  volumes:
+  - /etc/localtime:/etc/localtime
+  environment:
+  - NODE_ENV=production
+  - agent=tt
+  - entry=standardWebsocket
+  - port=8080
+  - DEBUG=websocket:*
